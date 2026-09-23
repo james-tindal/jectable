@@ -12,10 +12,12 @@ declare module '.' {
     early: (value: string) => string
     fallible: () => number
     first: () => string
+    object: { name: string; value: number }
     second: () => string
     singleton: () => { name: string }
     stable: (value: number) => number
     typed: (value: string) => number
+    typedObject: { value: string }
     unmockAllFirst: () => string
     unmockAllSecond: () => string
     withThis: (this: Receiver, value: string) => string
@@ -86,6 +88,25 @@ describe('jectable', () => {
     expect(second()).toBe('real second')
   })
 
+  it('changes an object proxy when a mock is installed, replaced, and removed', () => {
+    const object = jectable('object', { name: 'real', value: 1 })
+
+    expect(object.name).toBe('real')
+    expect(object.value).toBe(1)
+
+    inject('object', { name: 'first mock', value: 2 })
+    expect(object.name).toBe('first mock')
+    expect(object.value).toBe(2)
+
+    inject('object', { name: 'second mock', value: 3 })
+    expect(object.name).toBe('second mock')
+    expect(object.value).toBe(3)
+
+    reset('object')
+    expect(object.name).toBe('real')
+    expect(object.value).toBe(1)
+  })
+
   it('uses one shared registry for singleton access', () => {
     const realSingleton = { name: 'real' }
     const mockedSingleton = { name: 'mocked' }
@@ -116,8 +137,10 @@ describe('jectable', () => {
 
 void function verifyTypes(): void {
   const typed = jectable('typed', value => value.length)
+  const typedObject = jectable('typedObject', { value: 'real' })
 
   expectTypeOf(typed).toEqualTypeOf<(value: string) => number>()
+  expectTypeOf(typedObject).toEqualTypeOf<{ value: string }>()
 
   // @ts-expect-error Unknown names are rejected.
   inject('missing', () => 'missing')
@@ -127,6 +150,12 @@ void function verifyTypes(): void {
 
   // @ts-expect-error A real implementation must have the registered type.
   jectable('typed', (value: number) => value)
+
+  // @ts-expect-error An object mock must have the registered implementation type.
+  inject('typedObject', { value: 1 })
+
+  // @ts-expect-error A real object must have the registered implementation type.
+  jectable('typedObject', { value: 1 })
 
   // @ts-expect-error Only registered names can be removed.
   reset('missing')
