@@ -44,3 +44,6 @@ export function jectable<Name extends JectableName>(
 export function reset<Name extends JectableName>(name: Name): void {
   mocks.delete(name)
 }
+
+/** Remove all current mocks. Future calls use their real implementations. */
+export const resetAll = () => mocks.clear()

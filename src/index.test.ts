@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test'
 
-import { inject, jectable, reset } from '.'
+import { inject, jectable, reset, resetAll } from '.'
 
 type Receiver = { prefix: string }
 
@@ -16,6 +16,8 @@ declare module '.' {
     singleton: () => { name: string }
     stable: (value: number) => number
     typed: (value: string) => number
+    unmockAllFirst: () => string
+    unmockAllSecond: () => string
     withThis: (this: Receiver, value: string) => string
   }
 }
@@ -68,6 +70,19 @@ describe('jectable', () => {
     inject('first', () => 'mock first')
 
     expect(first()).toBe('mock first')
+    expect(second()).toBe('real second')
+  })
+
+  it('removes all current mocks', () => {
+    const first = jectable('unmockAllFirst', () => 'real first')
+    const second = jectable('unmockAllSecond', () => 'real second')
+
+    inject('unmockAllFirst', () => 'mock first')
+    inject('unmockAllSecond', () => 'mock second')
+
+    resetAll()
+
+    expect(first()).toBe('real first')
     expect(second()).toBe('real second')
   })
 
