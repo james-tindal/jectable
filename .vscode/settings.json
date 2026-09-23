@@ -1,0 +1,12 @@
+{
+  "npm.scriptRunner": "vp",
+  "oxc.enable.oxfmt": false,
+  "oxc.enable.oxlint": true,
+  "oxc.path.oxlint": "./node_modules/.pnpm/node_modules/oxlint/bin/oxlint",
+  "oxc.fixKind": "all",
+  "oxc.disableNestedConfig": true,
+  "oxc.fmt.disableNestedConfig": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  }
+}
