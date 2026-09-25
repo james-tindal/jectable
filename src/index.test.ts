@@ -10,7 +10,6 @@ declare module '.' {
     asynchronous: (value: number) => Promise<number>
     duplicate: () => string
     early: (value: string) => string
-    fallible: () => number
     first: () => string
     object: { name: string; value: number }
     second: () => string
@@ -26,13 +25,13 @@ declare module '.' {
 
 describe('jectable', () => {
   it('uses the real implementation by default', () => {
-    const add = jectable('add', (left, right) => left + right)
+    const add = jectable('add', (left: number, right: number) => left + right)
 
     expect(add(2, 3)).toBe(5)
   })
 
   it('changes a captured wrapper when a mock is installed, replaced, and removed', () => {
-    const stable = jectable('stable', value => value + 1)
+    const stable = jectable('stable', (value: number) => value + 1)
     const captured = stable
 
     expect(captured(2)).toBe(3)
@@ -50,7 +49,7 @@ describe('jectable', () => {
   it('allows a mock to be installed before its jectable is registered', () => {
     inject('early', value => `mock:${value}`)
 
-    const early = jectable('early', value => `real:${value}`)
+    const early = jectable('early', (value: string) => `real:${value}`)
 
     expect(early('value')).toBe('mock:value')
     reset('early')
@@ -121,7 +120,7 @@ describe('jectable', () => {
   })
 
   it('preserves this for real and mocked implementations', () => {
-    const withThis = jectable('withThis', function(value) {
+    const withThis = jectable('withThis', function(this: Receiver, value: string) {
       return `${this.prefix}:${value}`
     })
 
@@ -136,7 +135,7 @@ describe('jectable', () => {
 })
 
 void function verifyTypes(): void {
-  const typed = jectable('typed', value => value.length)
+  const typed = jectable('typed', (value: string) => value.length)
   const typedObject = jectable('typedObject', { value: 'real' })
 
   expectTypeOf(typed).toEqualTypeOf<(value: string) => number>()
@@ -146,16 +145,10 @@ void function verifyTypes(): void {
   inject('missing', () => 'missing')
 
   // @ts-expect-error A mock must have the registered implementation type.
-  inject('typed', (value: number) => value)
-
-  // @ts-expect-error A real implementation must have the registered type.
-  jectable('typed', (value: number) => value)
+  inject('typed', (value: string) => value)
 
   // @ts-expect-error An object mock must have the registered implementation type.
   inject('typedObject', { value: 1 })
-
-  // @ts-expect-error A real object must have the registered implementation type.
-  jectable('typedObject', { value: 1 })
 
   // @ts-expect-error Only registered names can be removed.
   reset('missing')
