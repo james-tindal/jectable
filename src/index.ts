@@ -4,10 +4,9 @@ const mocks = new Map<PropertyKey, object>()
 /** The name-to-function map that consumers extend through module augmentation. */
 export interface Jectables {}
 
-type JectableName = {
-  [Name in keyof Jectables]: Jectables[Name] extends object ? Name : never
-}[keyof Jectables]
-type MockImplementation<Name extends JectableName> = Jectables[Name]
+type JectableName = keyof Jectables | (string & {})
+type MockImplementation<Name extends JectableName> =
+  Name extends keyof Jectables ? Jectables[Name] : object
 
 /** Install or replace the mock for a registered name. */
 export function inject<Name extends JectableName>(
@@ -49,7 +48,7 @@ export function jectable<Name extends PropertyKey, Implementation extends object
 }
 
 /** Remove a name's current mock. Future calls use its real implementation. */
-export function reset<Name extends JectableName>(name: Name): void {
+export function reset<Name extends keyof Jectables | (string & {})>(name: Name): void {
   mocks.delete(name)
 }
 

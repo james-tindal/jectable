@@ -141,8 +141,8 @@ void function verifyTypes(): void {
   expectTypeOf(typed).toEqualTypeOf<(value: string) => number>()
   expectTypeOf(typedObject).toEqualTypeOf<{ value: string }>()
 
-  // @ts-expect-error Unknown names are rejected.
-  inject('missing', () => 'missing')
+  inject('untyped', { any: 'value' })
+  inject('anotherUntyped', () => 'value')
 
   // @ts-expect-error A mock must have the registered implementation type.
   inject('typed', (value: string) => value)
@@ -150,6 +150,5 @@ void function verifyTypes(): void {
   // @ts-expect-error An object mock must have the registered implementation type.
   inject('typedObject', { value: 1 })
 
-  // @ts-expect-error Only registered names can be removed.
   reset('missing')
 }
