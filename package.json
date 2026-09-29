@@ -34,6 +34,7 @@
     "build": "vp pack",
     "check": "vp check",
     "lint": "vp lint",
+    "prepack": "vp pack",
     "test": "vp test",
     "typecheck": "vp check --no-fmt --no-lint"
   },
