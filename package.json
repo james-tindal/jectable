@@ -2,6 +2,10 @@
   "name": "jectable",
   "version": "1.0.0",
   "description": "Mock without dependency injection or module mocking",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/james-tindal/jectable.git"
+  },
   "type": "module",
   "exports": {
     ".": {
