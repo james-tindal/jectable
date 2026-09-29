@@ -71,7 +71,7 @@ import { defineConfig } from 'vite'
 export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
-      jectable: mode === 'test' ? undefined : 'jectable/production',
+      jectable: mode === 'test' ? 'jectable' : 'jectable/production',
     },
   },
 }))
