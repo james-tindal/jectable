@@ -1,6 +1,6 @@
 {
   "name": "jectable",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Mock without dependency injection or module mocking",
   "repository": {
     "type": "git",
