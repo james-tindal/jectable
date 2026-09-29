@@ -6,7 +6,10 @@ export default defineConfig({
     alwaysBundle: ['@webfill/async-context'],
   },
   dts: true,
-  entry: 'src/index.ts',
+  entry: {
+    index: 'src/index.ts',
+    production: 'src/production.js',
+  },
   format: ['esm', 'cjs'],
   platform: 'neutral',
   sourcemap: true,

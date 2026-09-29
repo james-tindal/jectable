@@ -13,6 +13,10 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
+    },
+    "./production": {
+      "import": "./dist/production.js",
+      "require": "./dist/production.cjs"
     }
   },
   "main": "./dist/index.cjs",

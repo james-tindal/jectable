@@ -51,3 +51,28 @@ inject('settings', { apiUrl: 'http://localhost:3000' })
 reset('getUser')
 resetAll()
 ```
+
+
+## Production builds
+
+Replace `jectable` with `jectable/production` in production builds.
+
+The production entry point exports a no-op implementation:
+
+```js
+export const jectable = (_, i) => i
+```
+
+Configure the alias in your build tool. For example, in Vite:
+
+```ts
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      jectable: 'jectable/production',
+    },
+  },
+})
+```
