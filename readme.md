@@ -68,11 +68,11 @@ Configure the alias in your build tool. For example, in Vite:
 ```ts
 import { defineConfig } from 'vite'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   resolve: {
-    alias: {
-      jectable: 'jectable/production',
-    },
+    alias: mode === 'test'
+      ? {}
+      : { jectable: 'jectable/production' },
   },
-})
+}))
 ```
